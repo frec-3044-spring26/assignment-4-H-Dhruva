@@ -1,6 +1,6 @@
 ---
 title: "Lake Ice Phenology: Part 1"
-author: 'YOUR NAME'
+author: 'Harsheel Dhruva'
 format:
   html:
     embed-resources: true
