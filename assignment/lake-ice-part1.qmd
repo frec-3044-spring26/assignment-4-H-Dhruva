@@ -42,7 +42,7 @@ There should be four columns and \~2703 rows.
 We will practice key skills in the module using a focal lake. Use the `filter` function to filter the more extensive data to only contain the data from Lake Sunapee, a lake in New Hampshire. Filter the data `ice_data` by the variable `lake_name` to create a data frame called `sunapee`.
 
 ```{r}
-
+sunapee <- 
 ```
 
 You will be using the `sunapee` data for the rest of the module until Question 11
