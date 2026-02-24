@@ -211,6 +211,35 @@ Based on the slope value, how many more years are needed to pass before the lake
 
 **Answer 8:**
 
+$$
+y = mx + b, \quad y = \text{Day of year} \quad x = \text{Year}
+$$
+From the linear regression model:
+$$
+m = -0.1060227, \quad  b = 318.9486
+$$
+$$
+\therefore \quad y = 318.9486 - 0.1060227x
+$$
+
+Let a week decrease in ice off day be represented as:
+$$
+\Delta y =  y_1 - y_0 = -7
+$$
+$$
+\therefore \quad  318.9486 - 0.1060227x_1 - (318.9486 - 0.1060227x_0) = -7
+$$
+$$
+ - 0.1060227x_1 + 0.1060227x_0 = -7
+$$
+$$
+ - 0.1060227x_1 + 0.1060227x_0 = -7
+$$
+$$
+ x_1 - x_0 = \Delta x \approx 66.0235
+$$
+
+Based on the slope value, approximately 66.0236 years are needed to pass before the lake has a 1 week change in ice off doy. I think this is meaningful because
 
 
 ## Overall model assessment
@@ -251,8 +280,35 @@ The goal of this question is to make a forecast of the future ice-off day (with 
 **Answer 11:**
 
 ```{r}
+print("Prediction Ice-off Day of Year in 2040:")
+pred_2040 <- fit$coefficients[1] + fit$coefficients[2] * 2040
+pred_2040
 
+q <- quantile(sunapee$resid, probs = c(0.05, 0.95), na.rm = T)
+print("Confidence Interval:")
+ci_2040 <- pred_2040 + q
+ci_2040
+
+print("Interval Width:")
+width <- ci_2040[2] - ci_2040[1]
+width
 ```
+
+$$
+y = 318.9486 - 0.1060227x, \quad y = \text{Day of year} \quad x = \text{Year}
+$$
+
+Let x = 2040:
+
+$$
+y = 318.9486 - 0.1060227(2040) \approx 102.662
+$$
+The linear regression model predicts that in the year 2040, the ice off day of year will be approximately 102.6622. 
+
+We estimate with 90% confidence that the predicted value for the ice-off day of year in 2040 will be between 83.23486 and 116.81355 days. 
+
+The interval is 33.57868 days wide.
+
 
 # Is the ice-off day of the year changing more quickly in more recent years at Lake Sunapee?
 
