@@ -27,12 +27,13 @@ Now use `read_excel()` to read in `file_name`. Remember that Excel files can hav
 ```{r}
 library(readxl)
 
+ice_off_data <- read_excel(file_name, sheet = 2)
 ```
 
 Now, look at a preview of the data using the `head()` function. The `doy` in `ice_off_doy` stands for "day of the year" and is the day within the year where ice off occurred (January 1 = doy 1).  `did_not_freeze` is a column where 1 = did not freeze and 0 = did freeze.
 
 ```{r}
-
+head(ice_off_data)
 ```
 
 There should be four columns and \~2703 rows.
@@ -42,7 +43,11 @@ There should be four columns and \~2703 rows.
 We will practice key skills in the module using a focal lake. Use the `filter` function to filter the more extensive data to only contain the data from Lake Sunapee, a lake in New Hampshire. Filter the data `ice_data` by the variable `lake_name` to create a data frame called `sunapee`.
 
 ```{r}
-sunapee <- 
+library(tidyverse)
+
+sunapee <- ice_off_data |>
+  filter(lake_name == "Sunapee") |>
+  mutate(ice_off_doy = as.numeric(ice_off_doy))
 ```
 
 You will be using the `sunapee` data for the rest of the module until Question 11
@@ -58,7 +63,15 @@ Be sure that the title, x-axis, and y-axis labels are clearly labeled.
 **Answer 1:**
 
 ```{r}
+library(ggplot2)
 
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) +
+  geom_point() +
+  geom_line() +
+  labs( title = "Sunapee Ice-Off Day of Year Over Time",
+    x = "Year",
+    y = "Ice-Off Day of Year") +
+  theme_bw()
 ```
 
 # How does ice cover change over time at Lake Sunapee?
@@ -69,6 +82,8 @@ We want to model how the ice-off date changes over time. Our approach in this mo
 
 What do you expect the sign (plus, minus, or no change) to be for the slope of the relationship? Why?
 
+We expect a negative slope, as when the climate warms over time, we can expect lakes to lose ice earlier in the year. Since earlier dates correspond to smaller day of year values, increasing year should correspond to decreasing ice-off day of year.
+
 **Answer 2:**
 
 Use the `lm` function to predict `ice_off_doy` as a function (`~`) of the year for the data.frame called `sunapee`. You can learn more about the `lm` function [here](https://www.datacamp.com/tutorial/linear-regression-R)
@@ -76,13 +91,13 @@ Use the `lm` function to predict `ice_off_doy` as a function (`~`) of the year f
 Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
-
+fit <- lm(ice_off_doy ~ year, data = sunapee)
 ```
 
 Then, use the function `summary` to explore the result of the `lm` function.
 
 ```{r}
-
+summary(fit)
 ```
 
 The results of your linear model are in an object named `fit`, so you can find the regression coefficients at `fit$coefficients[1]` (the intercept) and `fit$coefficients[2]` (the slope). Confirm that `fit$coefficients[1]` and `fit$coefficients[2]` match the values expected from the summary command you ran above.
@@ -98,6 +113,8 @@ What is the direction of the slope? How does this match your expectations from Q
 
 **Answer 3:**
 
+The slope is negative (-0.1060227), indicating that ice-off dates are occurring earlier over time, which matches our expectation from Question 2.
+
 # Is our model any good?
 
 ## R2
@@ -109,6 +126,8 @@ First, it is important to understand how much variation is explained by the mode
 What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` strongly related?
 
 **Answer 4:**
+
+
 
 ## Residuals normally distributed
 
