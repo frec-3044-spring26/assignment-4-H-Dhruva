@@ -6,6 +6,12 @@ format:
     embed-resources: true
 ---
 
+## GitHub link
+
+Provide link to your assignment GitHub repository here:
+
+https://github.com/frec-3044-spring26/assignment-4-H-Dhruva.git
+
 # Data
 
 The data for this module are provided within the GitHub repository in the `data` sub-directory.
@@ -128,7 +134,7 @@ What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` 
 
 **Answer 4:**
 
-The R2 for the regression is 0.2003. Based on the fact that for environmental data trends that a R2 of 0.3 is considered good enough, we would believe that the `year` and `ice_off_doy` are not strongly related. 
+The R2 for the regression is 0.2055. Based on the fact that for environmental data trends that a R2 of 0.3 is considered good enough, we would believe that the `year` and `ice_off_doy` are not strongly related. 
 
 ## Residuals normally distributed
 
@@ -248,7 +254,7 @@ Based on the slope value, approximately 66.0236 years are needed to pass before 
 How comfortable are you proceeding with using this linear model for additional analysis and prediction? Why? (I am not looking for your gut answer, rather I want you to apply concepts taught in this module to justify your answer)
 
 **Answer 9:**
-I would say that I am moderately comfortable using this linear model for the descriptive trend analysis and prediction, but I will be cautious. For descriptive analysis, the linear regression does give a statistically significant slope (p = 2.5e-09), and the residuals of the model are approximately normal. Hence, the linear regression can be trusted for representing generalized long-term trends. However, the raw data demonstrates that there is a lot of variability from year to year, with large spikes/swings in the pattern of points, and the R2 value of the relationship between year and the ice of day of year is very low (0.2003), which leads me to be cautious of the results as they may not adequately represent for the variability or other influences.
+I would say that I am moderately comfortable using this linear model for the descriptive trend analysis and prediction, but I will be cautious. For descriptive analysis, the linear regression does give a statistically significant slope (p = 2.5e-09), and the residuals of the model are approximately normal. Hence, the linear regression can be trusted for representing generalized long-term trends. However, the raw data demonstrates that there is a lot of variability from year to year, with large spikes/swings in the pattern of points, and the R2 value of the relationship between year and the ice of day of year is very low (0.2055), which leads me to be cautious of the results as they may not adequately represent for the variability or other influences.
 
 **Question 10:**
 Now plot the data for Lake Sunapee (just like above - year on x-axis vs. ice of doy on y axis) but add the line from your regression results (e.g., fit intercept and slope). You will use the [`geom_abline`](https://ggplot2.tidyverse.org/reference/geom_abline.html). 
@@ -308,7 +314,6 @@ We estimate with 90% confidence that the predicted value for the ice-off day of 
 
 The interval is 33.57868 days wide.
 
-
 # Is the ice-off day of the year changing more quickly in more recent years at Lake Sunapee?
 
 To answer this question, you need to divide the Sunapee dataset into two datasets that represent an early and later period. For this analysis, use the year 1970 as a cut-off (one dataset is before 1970, and the other is 1970 and after).
@@ -317,9 +322,55 @@ To answer this question, you need to divide the Sunapee dataset into two dataset
 
 Use the skills developed above to evaluate the question "Is the ice-off day of year changing more quickly in more recent years at Lake Sunapee?"
 
+Use a mix of code, figures, and text to present your analysis.  If you want to compare slopes, be sure they are on the same plot.
+
 **Answer 12:**
 
-Use a mix of code, figures, and text to present your analysis.  If you want to compare slopes, be sure they are on the same plot.
+```{r}
+sunapee_pre1970  <- subset(sunapee, year < 1970)
+sunapee_post1970 <- subset(sunapee, year >= 1970)
+
+fit_pre1970  <- lm(ice_off_doy ~ year, data = sunapee_pre1970)
+fit_post1970 <- lm(ice_off_doy ~ year, data = sunapee_post1970)
+
+sunapee_pre1970$pred  <- predict(fit_pre1970)
+sunapee_post1970$pred <- predict(fit_post1970)
+
+print("Linear Regression Model of Sunapee Before 1970:")
+summary(fit_pre1970)
+
+print("Linear Regression Model of Sunapee After 1970:")
+summary(fit_post1970)
+
+print("Linear Regression Slope Sunapee Before 1970:")
+coef(fit_pre1970)[2]
+print("Linear Regression Slope Sunapee After 1970:")
+coef(fit_post1970)[2]
+
+
+sunapee_pre1970$period  <- "Pre-1970"
+sunapee_post1970$period <- "Post-1970"
+plot_data <- bind_rows(sunapee_pre1970, sunapee_post1970)
+
+ggplot(plot_data, aes(x = year, y = ice_off_doy, color = period)) +
+  geom_point(alpha = 0.5) +
+  geom_line(aes(y = pred)) +
+  labs(title = "Sunapee Ice-Off Day Trends Pre-1970 vs Post-1970",
+       x = "Year",
+       y = "Ice-Off Day of Year",
+       color = "Period") +
+  theme_bw()
+```
+
+Upon fitting linear regression models to two subsets of the Sunapee Ice-off data set by years before 1970 and years from 1970 onward, we can observe the slopes and R2 values of each model
+
+For the pre-1970 data, the fitted model produced a slope of $m_{\text{pre 1970}} = −0.10967$ days per year (p=0.00108). This indicates a statistically significant trend for earlier ice-off days to years prior 1970.
+
+For the post-1970 period, the fitted slope was $m_{\text{post1970}} = −0.30239$ days per year (p=0.000161). This also corresponds to a statistically significant trend for earlier ice-off days to years of 1970 and after. However, the slope magnitude of the post-1970 trend is approximately 2.8 times stronger in magnitude than the pre-1970 model.
+
+Additionally, the post-1970 model explains more variability in ice-off timing (R2 = 0.2336) compared to the pre-1970 model (R2 = 0.1027), suggesting a stronger linear signal after 1970.
+
+Although both periods show statistically significant trends toward earlier ice-off dates, the slope after 1970 is much steeper and the proportion of variance explained by year increased from 10.3% before 1970 to 23.4% after 1970, indicating that the rate at which ice-off is advancing has accelerated in the post-1970 era. The diagram also demonstrates a steeper decline in the day of year for ice off after 1970 compared to before. This all suggests that the ice-off day of year has been occurring more rapidly at Lake Sunepee recently.
 
 # Rendering and committing
 
