@@ -239,8 +239,7 @@ $$
  x_1 - x_0 = \Delta x \approx 66.0235
 $$
 
-Based on the slope value, approximately 66.0236 years are needed to pass before the lake has a 1 week change in ice off doy. I think this is meaningful because
-
+Based on the slope value, approximately 66.0236 years are needed to pass before the lake has a 1 week change in ice off day of year. I think this is meaningful because it reflects a persistent, low-frequency climate signal accumulating over decades. This gradual accumulation can be worse in practice as when melting occurs from under the ice, the water below gets more access to energy from light the would have otherwise been reflected. As a result, the melting will speed up and worsen in ways that our linear model does not reflect. Additionally, this warmer water will have less capacity to carry dissolved oxygen, which is bad for the cold-water fish and can lead to increase in phosphorus and reduced metals cycling within the sediment. 
 
 ## Overall model assessment
 
